@@ -7,7 +7,9 @@ import (
 	"github.com/lxyzhangqing/gne/utils"
 	"golang.org/x/net/html"
 	"math"
+	"regexp"
 	"strings"
+	"unicode/utf8"
 )
 
 func NewContentExtractor(root *html.Node) ContentExtractor {
@@ -225,13 +227,13 @@ func (c ContentExtractor) calcTextDensity(node *html.Node) *TextDensity {
 	}
 
 	tiText := strings.Join(textList, "\n")
-	ti := len(tiText)
+	ti := utf8.RuneCountInString(tiText)
 	ti = c.increaseTagWeight(ti, node)
 
 	aTagList := htmlquery.Find(node, ".//a")
-	lti := len(strings.Join(c.getAllTextOfElement(aTagList), ""))
+	lti := utf8.RuneCountInString(strings.Join(c.getAllTextOfElement(aTagList), ""))
 
-	tgi := len(utils.GetNodeTextByXPath(node, ".//*"))
+	tgi := len(htmlquery.Find(node, ".//*"))
 	ltgi := len(aTagList)
 
 	if tgi-ltgi == 0 {
@@ -265,10 +267,9 @@ func (c ContentExtractor) increaseTagWeight(ti int, node *html.Node) int {
 		return ti
 	}
 
-	for _, pattern := range c.highWeightKeywordPattern {
-		if pattern == class {
-			return 2 * ti
-		}
+	re := regexp.MustCompile(strings.Join(c.highWeightKeywordPattern, "|"))
+	if re.MatchString(class) {
+		return 2 * ti
 	}
 	return ti
 }
