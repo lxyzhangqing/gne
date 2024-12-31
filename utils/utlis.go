@@ -283,6 +283,11 @@ func NormalizeNode(node *html.Node) {
 	fn = func(n *html.Node) {
 		do(n)
 
+		// 如果当前节点已经被删除，不遍历其子节点
+		if n.Parent == nil && n.PrevSibling == nil && n.NextSibling == nil {
+			return
+		}
+
 		for c := n.FirstChild; c != nil; {
 			next := c.NextSibling
 			fn(c)
@@ -368,7 +373,7 @@ func StripTags(root *html.Node, tag string) {
 		if n.Data == tag {
 			if n.Parent != nil {
 				// merge the text content and children of the element into its parent
-				for c := n.FirstChild; c != nil; c = n.NextSibling {
+				for c := n.FirstChild; c != nil; c = c.NextSibling {
 					n.Parent.InsertBefore(CloneNode(c), n)
 				}
 				// remove the elements and their attributes

@@ -42,8 +42,8 @@ func (c ContentExtractor) Extract(opt *Options) (string, []string, error) {
 		// 对 HTML 进行预处理可能会破坏 HTML 原有的结构，导致根据原始 HTML 编写的 XPath 不可用
 		// 因此，仅对未指定bodyXpath进行预处理，否则直接按给定xpath进行提取
 		opt.BodyXPath = "//body"
-		utils.RemoveNoiseNode(c.root, opt.NoiseNodeList)
-		utils.NormalizeNode(c.root)
+		utils.RemoveNoiseNode(c.root.FirstChild, opt.NoiseNodeList)
+		utils.NormalizeNode(c.root.FirstChild)
 	}
 
 	bodyNodes := htmlquery.Find(c.root, opt.BodyXPath)
