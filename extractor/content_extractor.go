@@ -63,10 +63,6 @@ func (c ContentExtractor) Extract(opt *Options) (string, []string, error) {
 
 		nodeHash := utils.GetNodeHash(n)
 		densityInfo := c.calcTextDensity(n)
-		if densityInfo == nil {
-			return
-		}
-
 		textDensity := densityInfo.density
 		tiText := densityInfo.tiText
 		textTagCount := c.countTextTag(n, "p")
@@ -222,9 +218,6 @@ func (c ContentExtractor) calcTextDensity(node *html.Node) *TextDensity {
 	}
 
 	textList := c.getAllTextOfElement([]*html.Node{node})
-	if len(textList) == 0 {
-		return nil
-	}
 
 	tiText := strings.Join(textList, "\n")
 	ti := utf8.RuneCountInString(tiText)

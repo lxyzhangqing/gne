@@ -226,6 +226,11 @@ func NormalizeNode(node *html.Node) {
 	StripNodes(node, def.UselessTag)
 
 	do := func(n *html.Node) {
+		// remove comment tag
+		if n.Type == html.CommentNode {
+			RemoveNode(n)
+		}
+
 		// inspired by readability.
 		if def.TagsCanBeRemoveIfEmpty[n.Data] && n.FirstChild == nil {
 			RemoveNode(n)
