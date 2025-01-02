@@ -43,17 +43,12 @@ func (t TimeExtractor) extractFromUserXpath(xpath string) string {
 }
 
 func (t TimeExtractor) extractFromText() string {
-	textNodes := htmlquery.Find(t.root, ".//text")
-	if len(textNodes) == 0 {
-		return ""
-	}
-
-	text := utils.GetNodeText(textNodes[0])
+	text := utils.GetNodeText(t.root)
 	for _, pattern := range def.DatetimePattern {
 		re := regexp.MustCompile(pattern)
-		group := re.FindAllStringSubmatch(text, -1)
-		if len(group) > 0 && len(group[0]) > 1 {
-			return group[0][1]
+		result := re.FindString(text)
+		if result != "" {
+			return result
 		}
 	}
 	return ""
