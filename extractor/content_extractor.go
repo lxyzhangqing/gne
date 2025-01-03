@@ -131,19 +131,10 @@ func (c ContentExtractor) countTextTag(node *html.Node, tag string) int {
 		tag = "p"
 	}
 
-	var tagNum, directText int
-
 	tagNodes := htmlquery.Find(node, fmt.Sprintf(".//%s", tag))
-	if len(tagNodes) > 0 {
-		tagNum = len(utils.GetNodeText(tagNodes[0]))
-	}
-
 	textNodes := htmlquery.Find(node, "text()")
-	if len(textNodes) > 0 {
-		directText = len(utils.GetNodeText(textNodes[0]))
-	}
 
-	return tagNum + directText
+	return len(tagNodes) + len(textNodes)
 }
 
 func (c ContentExtractor) getAllTextOfElement(nodes []*html.Node) []string {
