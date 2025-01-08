@@ -21,7 +21,7 @@ func (t TitleExtractor) extractByXPath(xpath string) string {
 	if xpath != "" && t.root != nil {
 		titles := htmlquery.Find(t.root, xpath)
 		if len(titles) > 0 {
-			return titles[0].Data
+			return utils.GetNodeText(titles[0])
 		}
 	}
 	return ""
