@@ -110,6 +110,6 @@ func (t TitleExtractor) Extract(xpath string) (string, error) {
 
 func normalize(title string) string {
 	title = strings.Replace(title, "\n", "", -1)
-	title = strings.Trim(title, "")
+	title = strings.Trim(title, " ")
 	return title
 }
