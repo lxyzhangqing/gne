@@ -90,25 +90,25 @@ func (t TitleExtractor) extractByHTagAndTitle() string {
 
 func (t TitleExtractor) Extract(xpath string) (string, error) {
 	if title := t.extractByXPath(xpath); title != "" {
-		return normalize(title), nil
+		return titleNormalize(title), nil
 	}
 
 	if title := t.extractByHTagAndTitle(); title != "" {
-		return normalize(title), nil
+		return titleNormalize(title), nil
 	}
 
 	if title := t.extractByTitle(); title != "" {
-		return normalize(title), nil
+		return titleNormalize(title), nil
 	}
 
 	if title := t.extractByHTag(); title != "" {
-		return normalize(title), nil
+		return titleNormalize(title), nil
 	}
 
 	return "", nil
 }
 
-func normalize(title string) string {
+func titleNormalize(title string) string {
 	title = strings.Replace(title, "\n", "", -1)
 	title = strings.Trim(title, " ")
 	return title
