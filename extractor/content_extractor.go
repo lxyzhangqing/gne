@@ -53,6 +53,27 @@ func (c ContentExtractor) Extract(opt *Options) (string, []string, error) {
 		return "", nil, fmt.Errorf("xpath %s not found", opt.BodyXPath)
 	}
 
+	// 如果传入xpath，直接返回xpath定位到的文本内容
+	if opt.BodyXPath != "//body" {
+		content := utils.GetNodeText(bodyNodes[0])
+		imagesList := make([]string, 0)
+		imagesNodeList := htmlquery.Find(bodyNodes[0], ".//img/@src")
+		if imagesNodeList != nil {
+			for _, imgNode := range imagesNodeList {
+				img := utils.GetNodeText(imgNode)
+				imagesList = append(imagesList, img)
+			}
+		}
+
+		if opt.Host != "" {
+			for i := 0; i < len(imagesList); i++ {
+				imagesList[i] = utils.PadHostForImages(opt.Host, imagesList[i])
+			}
+		}
+		return content, imagesList, nil
+	}
+
+	// 用户未传入xpath，则根据文本密度计算确认
 	// 遍历节点
 	var f func(*html.Node)
 	f = func(n *html.Node) {
