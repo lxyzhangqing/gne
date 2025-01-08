@@ -27,6 +27,10 @@ func (a AuthorExtractor) Extract(xpath string) (string, error) {
 	}
 
 	text := utils.GetNodeText(textNodes[0])
+	if xpath != ".//text()" {
+		return text, nil
+	}
+
 	for _, pattern := range def.AuthorPattern {
 		re := regexp.MustCompile(pattern)
 		group := re.FindAllStringSubmatch(text, -1)
