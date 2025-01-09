@@ -57,7 +57,12 @@ func (c ContentExtractor) Extract(opt *Options) (string, []string, error) {
 	if opt.BodyXPath != "//body" {
 		content := utils.GetNodeText(bodyNodes[0])
 		imagesList := make([]string, 0)
-		imagesNodeList := htmlquery.Find(bodyNodes[0], ".//img/@src")
+		// 优先处理懒加载的图片
+		imagesNodeList := htmlquery.Find(bodyNodes[0], ".//img/@data-src")
+		if len(imagesNodeList) == 0 {
+			// 非懒加载的图片，按正常逻辑处理
+			imagesNodeList = htmlquery.Find(bodyNodes[0], ".//img/@src")
+		}
 		if imagesNodeList != nil {
 			for _, imgNode := range imagesNodeList {
 				img := utils.GetNodeText(imgNode)
@@ -90,7 +95,12 @@ func (c ContentExtractor) Extract(opt *Options) (string, []string, error) {
 		sbdi := c.calcSbDi(tiText, densityInfo.ti, densityInfo.lti)
 
 		imagesList := make([]string, 0)
-		imagesNodeList := htmlquery.Find(n, ".//img/@src")
+		// 优先处理懒加载的图片
+		imagesNodeList := htmlquery.Find(bodyNodes[0], ".//img/@data-src")
+		if len(imagesNodeList) == 0 {
+			// 非懒加载的图片，按正常逻辑处理
+			imagesNodeList = htmlquery.Find(bodyNodes[0], ".//img/@src")
+		}
 		if imagesNodeList != nil {
 			for _, imgNode := range imagesNodeList {
 				img := utils.GetNodeText(imgNode)
