@@ -96,10 +96,10 @@ func (c ContentExtractor) Extract(opt *Options) (string, []string, error) {
 
 		imagesList := make([]string, 0)
 		// 优先处理懒加载的图片
-		imagesNodeList := htmlquery.Find(bodyNodes[0], ".//img/@data-src")
+		imagesNodeList := htmlquery.Find(n, ".//img/@data-src")
 		if len(imagesNodeList) == 0 {
 			// 非懒加载的图片，按正常逻辑处理
-			imagesNodeList = htmlquery.Find(bodyNodes[0], ".//img/@src")
+			imagesNodeList = htmlquery.Find(n, ".//img/@src")
 		}
 		if imagesNodeList != nil {
 			for _, imgNode := range imagesNodeList {
